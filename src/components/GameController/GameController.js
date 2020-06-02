@@ -104,7 +104,7 @@ const reducer = (state, action) => {
             };
 
         case "RESTART":
-            return { initialState };
+            return { ...initialState };
         default:
             throw new Error();
     }
@@ -125,10 +125,10 @@ const GameController = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        window.addEventListener("keydown", directionHandler, false);
+        window.addEventListener("keyup", directionHandler, false);
 
         return () =>
-            window.removeEventListener("keydown", directionHandler, false);
+            window.removeEventListener("keyup", directionHandler, false);
     }, []);
 
     const directionHandler = (event) => {
@@ -141,21 +141,24 @@ const GameController = (props) => {
     };
 
     useEffect(() => {
-        const onTick = () => {
-            if (
-                checkSnakeCollapsedHandler(state.dots) ||
-                checkBorderHandler(state.dots[state.dots.length - 1])
-            ) {
-                dispatch({ type: "GAME_OVER" });
-            } else {
-                dispatch({ type: "MOVE" });
-            }
-        };
-
-        const interval = setInterval(onTick, 100);
-
-        return () => clearInterval(interval);
-    }, [state]);
+        if(props.start) {
+            const onTick = () => {
+                if (
+                    checkSnakeCollapsedHandler(state.dots) ||
+                    checkBorderHandler(state.dots[state.dots.length - 1])
+                ) {
+                    dispatch({ type: "GAME_OVER" });
+                } else {
+                    dispatch({ type: "MOVE" });
+                }
+            };
+    
+            const interval = setInterval(onTick, 100);
+    
+            return () => clearInterval(interval);
+        }
+        
+    }, [state, props]);
 
     return (
         <GameArea>
