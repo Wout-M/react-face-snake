@@ -16,13 +16,6 @@ const DIRECTIONS = {
     right: "RIGHT",
 };
 
-const KEY_CODE_DIRS = {
-    37: DIRECTIONS.left,
-    38: DIRECTIONS.up,
-    39: DIRECTIONS.right,
-    40: DIRECTIONS.down,
-};
-
 const foodCoordsHandler = () => {
     const min = 1;
     const max = 98;
