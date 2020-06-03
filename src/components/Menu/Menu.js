@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Spinner from "../Spinner/Spinner";
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    video: {
+        borderRadius: theme.spacing(1),
+        marginBottom: theme.spacing(2),
+        width: "100%"
+    },
+    button: {
+        background: "rgb(100, 32, 245)",
+    },
+}));
 
 const Menu = (props) => {
     const [ready, setReady] = useState(false);
+    const classes = useStyles();
 
     useEffect(() => {
         let video = document.getElementById("video");
@@ -30,11 +43,23 @@ const Menu = (props) => {
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <Grid item>
-                <video id="video" height="240" autoPlay playsInline></video>
+                <video
+                    className={classes.video}
+                    id="video"
+                    autoPlay
+                    playsInline
+                ></video>
             </Grid>
             <Grid item>
                 {props.over ? (
-                    <Button onClick={() => window.location.reload()}>Restart game</Button>
+                    <Button
+                        onClick={() => window.location.reload()}
+                        color="primary"
+                        variant="contained"
+                        classes={{ containedPrimary: classes.button }}
+                    >
+                        Restart game
+                    </Button>
                 ) : props.loading ? (
                     <Spinner />
                 ) : (
@@ -48,8 +73,13 @@ const Menu = (props) => {
                             <Button
                                 onClick={props.startGame()}
                                 disabled={!ready}
+                                color="primary"
+                                variant="contained"
+                                classes={{ containedPrimary: classes.button }}
                             >
-                                Start game
+                                <Typography variant="body1">
+                                    Start game
+                                </Typography>
                             </Button>
                         </Grid>
                     </Grid>

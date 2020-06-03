@@ -4,13 +4,13 @@
     height: 80px;
     margin-bottom: 10px;
     text-align: center;
+    margin: auto;
 }
 .Loader:after {
     content: " ";
     display: block;
     width: 64px;
     height: 64px;
-    margin: 8px;
     border-radius: 50%;
     border: 6px solid #000;
     border-color: #000 transparent #000 transparent;
