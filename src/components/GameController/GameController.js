@@ -1,10 +1,13 @@
-import React, { useEffect, useReducer } from "react";
-import GameArea from "../../views/GameArea/GameArea";
+import React, { useEffect, useReducer, useState } from "react";
+
+import GameArea from "../GameArea/GameArea";
 import Snake from "../Snake/Snake";
 import Food from "../Food/Food";
+import Layout from "../Layout/Layout";
 import { load, predict } from "../../model/facemesh";
+import Menu from "../Menu/Menu";
 
-const speed = 100;
+const fps = 10;
 
 const DIRECTIONS = {
     up: "UP",
@@ -74,7 +77,7 @@ const loadModel = async () => {
 };
 
 const getFaceDirecton = async (model, video) => {
-    return await predict(model, video);
+    return await predict(model, video)
 };
 
 const reducer = (state, action) => {
@@ -105,21 +108,15 @@ const reducer = (state, action) => {
             };
 
         case "GAME_OVER":
-            if (!state.gameOver)
-                window.alert(
-                    `Game over!\n Your score was ${state.dots.length}`
-                );
             return {
                 ...state,
                 gameOver: true,
+                started: false,
             };
 
         case "START":
-            return { ...state, start: true };
+            return { ...state, started: true };
 
-        case "SWITCH_INPUT":
-            const currentInput = state.useKeys;
-            return { ...state, useKeys: !currentInput };
         default:
             throw new Error();
     }
@@ -134,100 +131,99 @@ const initialState = {
     ],
     food: foodCoordsHandler(),
     gameOver: false,
-    start: false,
-    useKeys: true,
+    started: false,
+    canStart: false,
 };
 
 const GameController = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    const { start, useKeys } = props;
-
-    const directionHandler = (event) => {
-        if (KEY_CODE_DIRS[event.keyCode]) {
-            dispatch({
-                type: "CHANGE_DIRECTION",
-                direction: KEY_CODE_DIRS[event.keyCode],
-            });
-        }
-    };
+    const [start, setStart] = useState(false);
+    const [direction, setDirection] = useState(DIRECTIONS.down);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (state.start) {
-            const onTick = () => {
+        if (state.started) {
+            const moveSnake = () => {
                 if (
                     checkSnakeCollapsedHandler(state.dots) ||
                     checkBorderHandler(state.dots[state.dots.length - 1])
                 ) {
                     dispatch({ type: "GAME_OVER" });
+                    setStart(false)
                 } else {
                     dispatch({ type: "MOVE" });
                 }
             };
 
-            const interval = setInterval(onTick, speed);
+            const interval = setTimeout(moveSnake, 1000 / fps);
 
-            return () => clearInterval(interval);
+            return () => clearTimeout(interval);
         }
     }, [state]);
 
     useEffect(() => {
         let video = document.getElementById("video");
-
         if (start) {
-            if (useKeys) {
-                dispatch({ type: "START" });
-
-                window.addEventListener("keyup", directionHandler, false);
-
-                return () =>  window.removeEventListener("keyup", directionHandler, false);
-            } else {
+            const getPrediction = async () => {
                 const model = loadModel();
                 model.then((model) => {
-                    dispatch({ type: "START" });
+                    dispatch({type: 'START'})
+                    
 
-                    const onTick = () => {
-                        getFaceDirecton(model, video).then((prediction) => {
-                            if (prediction) {
-                                let direction;
-
-                                const x =(prediction.topLeft[0][0] + prediction.bottomRight[0][0]) / 2;
-                                const y =
-                                    (prediction.topLeft[0][1] + prediction.bottomRight[0][1]) / 2;
-
-                                const firstVerticalBorder = video.videoWidth / 3;
-                                const secondVerticalBorder = (video.videoWidth / 3) * 2;
-                                const horizontalBorder = video.videoHeight / 2;
-
-                                if (x <= firstVerticalBorder) {
-                                    direction = DIRECTIONS.left;
-                                } else if (x >= secondVerticalBorder) {
-                                    direction = DIRECTIONS.right;
-                                } else if (y >= horizontalBorder) {
-                                    direction = DIRECTIONS.down;
-                                } else {
-                                    direction = DIRECTIONS.up;
-                                }
-
-                                dispatch({
-                                    type: "CHANGE_DIRECTION",
-                                    direction: direction,
-                                });
-                            }
+                    const  getDirecton = () => {
+                        getFaceDirecton(model, video).then((response) => {
+                            setLoading(false);
+                            console.log("y")
+                            setDirection(response)
                         });
                     };
-                    const interval = setInterval(onTick, speed);
-                    return () => clearInterval(interval);
+    
+                     const interval = setInterval(getDirecton, 1000 / fps);
+                     return () => clearInterval(interval)
+                
                 });
-            } //)
+            }
+            getPrediction()
         }
-        //}
-    }, [start, useKeys]);
+    }, [start]);
+
+    useEffect(() => {
+        dispatch({
+            type: "CHANGE_DIRECTION",
+            direction: direction,
+        });
+    }, [direction])
+
+    const startGameHandler = () => {
+        setStart(true);
+        setLoading(true)
+    };
+    const restartGameHandler = () => {
+        setStart(true);
+        setLoading(true);
+    };
 
     return (
-        <GameArea>
-            <Snake dots={state.dots} />
-            <Food coords={state.food} />
-        </GameArea>
+        <Layout
+            left={
+                <Menu
+                    startGame={() => startGameHandler}
+                    restartGame={() => restartGameHandler}
+                    started={state.started}
+                    keys={state.useKeys}
+                    over={state.gameOver}
+                    loading={loading}
+                />
+            }
+            right={
+                state.gameOver ? <p>Game over!</p>
+                :
+                <GameArea>
+                    <Snake dots={state.dots} />
+                    <Food coords={state.food} />
+                </GameArea>
+            }
+        />
     );
 };
 

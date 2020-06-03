@@ -1,11 +1,11 @@
 import React from 'react';
-import Layout from "./views/Layout/Layout"
+import GameController from "./components/GameController/GameController"
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Layout/>
+      <GameController/>
     </div>
   );
 }
