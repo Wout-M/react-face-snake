@@ -16,7 +16,7 @@ jobs:
 workflows:
     push:
         jobs:
-            - build-test-deploy
+            - build-test-deploy:
                 filters:
                     branches:
                         only:
