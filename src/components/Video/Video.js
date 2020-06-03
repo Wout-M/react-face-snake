@@ -23,7 +23,7 @@ const Video = (props) => {
     }, []);
 
     return (
-        <video id="video" width="320" height="240" autoPlay playsInline></video>
+        <video id="video" height="240" autoPlay playsInline></video>
     );
 };
 
