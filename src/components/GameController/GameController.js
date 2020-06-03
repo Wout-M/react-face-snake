@@ -2,6 +2,9 @@ import React, { useEffect, useReducer } from "react";
 import GameArea from "../../views/GameArea/GameArea";
 import Snake from "../Snake/Snake";
 import Food from "../Food/Food";
+import { load, predict } from "../../model/facemesh";
+
+const speed = 100;
 
 const DIRECTIONS = {
     up: "UP",
@@ -66,6 +69,14 @@ const enlargeSnakeHandler = (snake) => {
     return newSnake;
 };
 
+const loadModel = async () => {
+    return await load();
+};
+
+const getFaceDirecton = async (model, video) => {
+    return await predict(model, video);
+};
+
 const reducer = (state, action) => {
     switch (action.type) {
         case "CHANGE_DIRECTION":
@@ -90,7 +101,7 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 dots: snake,
-                food: foodCoords
+                food: foodCoords,
             };
 
         case "GAME_OVER":
@@ -103,8 +114,12 @@ const reducer = (state, action) => {
                 gameOver: true,
             };
 
-        case "RESTART":
-            return { initialState };
+        case "START":
+            return { ...state, start: true };
+
+        case "SWITCH_INPUT":
+            const currentInput = state.useKeys;
+            return { ...state, useKeys: !currentInput };
         default:
             throw new Error();
     }
@@ -119,17 +134,13 @@ const initialState = {
     ],
     food: foodCoordsHandler(),
     gameOver: false,
+    start: false,
+    useKeys: true,
 };
 
 const GameController = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    useEffect(() => {
-        window.addEventListener("keydown", directionHandler, false);
-
-        return () =>
-            window.removeEventListener("keydown", directionHandler, false);
-    }, []);
+    const { start, useKeys } = props;
 
     const directionHandler = (event) => {
         if (KEY_CODE_DIRS[event.keyCode]) {
@@ -141,21 +152,76 @@ const GameController = (props) => {
     };
 
     useEffect(() => {
-        const onTick = () => {
-            if (
-                checkSnakeCollapsedHandler(state.dots) ||
-                checkBorderHandler(state.dots[state.dots.length - 1])
-            ) {
-                dispatch({ type: "GAME_OVER" });
-            } else {
-                dispatch({ type: "MOVE" });
-            }
-        };
+        if (state.start) {
+            const onTick = () => {
+                if (
+                    checkSnakeCollapsedHandler(state.dots) ||
+                    checkBorderHandler(state.dots[state.dots.length - 1])
+                ) {
+                    dispatch({ type: "GAME_OVER" });
+                } else {
+                    dispatch({ type: "MOVE" });
+                }
+            };
 
-        const interval = setInterval(onTick, 100);
+            const interval = setInterval(onTick, speed);
 
-        return () => clearInterval(interval);
+            return () => clearInterval(interval);
+        }
     }, [state]);
+
+    useEffect(() => {
+        let video = document.getElementById("video");
+
+        if (start) {
+            if (useKeys) {
+                dispatch({ type: "START" });
+
+                window.addEventListener("keyup", directionHandler, false);
+
+                return () =>  window.removeEventListener("keyup", directionHandler, false);
+            } else {
+                const model = loadModel();
+                model.then((model) => {
+                    dispatch({ type: "START" });
+
+                    const onTick = () => {
+                        getFaceDirecton(model, video).then((prediction) => {
+                            if (prediction) {
+                                let direction;
+
+                                const x =(prediction.topLeft[0][0] + prediction.bottomRight[0][0]) / 2;
+                                const y =
+                                    (prediction.topLeft[0][1] + prediction.bottomRight[0][1]) / 2;
+
+                                const firstVerticalBorder = video.videoWidth / 3;
+                                const secondVerticalBorder = (video.videoWidth / 3) * 2;
+                                const horizontalBorder = video.videoHeight / 2;
+
+                                if (x <= firstVerticalBorder) {
+                                    direction = DIRECTIONS.left;
+                                } else if (x >= secondVerticalBorder) {
+                                    direction = DIRECTIONS.right;
+                                } else if (y >= horizontalBorder) {
+                                    direction = DIRECTIONS.down;
+                                } else {
+                                    direction = DIRECTIONS.up;
+                                }
+
+                                dispatch({
+                                    type: "CHANGE_DIRECTION",
+                                    direction: direction,
+                                });
+                            }
+                        });
+                    };
+                    const interval = setInterval(onTick, speed);
+                    return () => clearInterval(interval);
+                });
+            } //)
+        }
+        //}
+    }, [start, useKeys]);
 
     return (
         <GameArea>
