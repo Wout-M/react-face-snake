@@ -2,6 +2,8 @@
     height: 600px;
     width: 600px;
     position: relative;
-    margin: 50px auto;
-    border: 2px solid black
+    margin: auto;
+    border: 2px solid #1f1926;
+    border-radius: 10px;
+    z-index: 3;
 }

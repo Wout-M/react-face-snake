@@ -2,7 +2,16 @@
     position: absolute;
     width: 2%;
     height: 2%;
-    background: black;
-    border: 1px solid white;
+    background: #0069ff;
     z-index: 2;
+    border-radius: 50%;
+}
+
+.First {
+    position: absolute;
+    width: 2%;
+    height: 2%;
+    background: #6420f5;
+    z-index: 2;
+    border-radius: 50%;
 }

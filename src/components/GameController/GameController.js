@@ -1,11 +1,15 @@
 import React, { useEffect, useReducer, useState } from "react";
 
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+
 import GameArea from "../GameArea/GameArea";
 import Snake from "../Snake/Snake";
 import Food from "../Food/Food";
-import Layout from "../Layout/Layout";
 import { load, predict } from "../../model/facemesh";
 import Menu from "../Menu/Menu";
+import Box from "../Box/Box";
 
 const fps = 10;
 
@@ -70,7 +74,7 @@ const loadModel = async () => {
 };
 
 const getFaceDirecton = async (model, video) => {
-    return await predict(model, video)
+    return await predict(model, video);
 };
 
 const reducer = (state, action) => {
@@ -118,9 +122,9 @@ const reducer = (state, action) => {
 const initialState = {
     direction: DIRECTIONS.down,
     dots: [
-        [0, 0],
-        [0, 2],
-        [0, 4],
+        [50, 50],
+        [50, 52],
+        [50, 54],
     ],
     food: foodCoordsHandler(),
     gameOver: false,
@@ -128,11 +132,24 @@ const initialState = {
     canStart: false,
 };
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        padding: "30px",
+        margin: "auto",
+        maxWidth: "1400px",
+    },
+    gameover: {
+        height: "600px",
+        width: "600px",
+    },
+}));
+
 const GameController = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [start, setStart] = useState(false);
     const [direction, setDirection] = useState(DIRECTIONS.down);
     const [loading, setLoading] = useState(false);
+    const classes = useStyles();
 
     useEffect(() => {
         if (state.started) {
@@ -142,7 +159,7 @@ const GameController = (props) => {
                     checkBorderHandler(state.dots[state.dots.length - 1])
                 ) {
                     dispatch({ type: "GAME_OVER" });
-                    setStart(false)
+                    setStart(false);
                 } else {
                     dispatch({ type: "MOVE" });
                 }
@@ -160,23 +177,20 @@ const GameController = (props) => {
             const getPrediction = async () => {
                 const model = loadModel();
                 model.then((model) => {
-                    dispatch({type: 'START'})
-                    
+                    dispatch({ type: "START" });
 
-                    const  getDirecton = () => {
+                    const getDirecton = () => {
                         getFaceDirecton(model, video).then((response) => {
                             setLoading(false);
-                            console.log("y")
-                            setDirection(response)
+                            response && setDirection(response);
                         });
                     };
-    
-                     const interval = setInterval(getDirecton, 1000 / fps);
-                     return () => clearInterval(interval)
-                
+
+                    const interval = setInterval(getDirecton, 1000 / fps);
+                    return () => clearInterval(interval);
                 });
-            }
-            getPrediction()
+            };
+            getPrediction();
         }
     }, [start]);
 
@@ -185,38 +199,81 @@ const GameController = (props) => {
             type: "CHANGE_DIRECTION",
             direction: direction,
         });
-    }, [direction])
+    }, [direction]);
 
     const startGameHandler = () => {
-        setStart(true);
-        setLoading(true)
-    };
-    const restartGameHandler = () => {
         setStart(true);
         setLoading(true);
     };
 
+    const openDialogHandler = () => {
+        props.openDialog();
+    };
+
     return (
-        <Layout
-            left={
-                <Menu
-                    startGame={() => startGameHandler}
-                    restartGame={() => restartGameHandler}
-                    started={state.started}
-                    keys={state.useKeys}
-                    over={state.gameOver}
-                    loading={loading}
-                />
-            }
-            right={
-                state.gameOver ? <p>Game over!</p>
-                :
-                <GameArea>
-                    <Snake dots={state.dots} />
-                    <Food coords={state.food} />
-                </GameArea>
-            }
-        />
+        <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+            className={classes.root}
+        >
+            <Grid item md>
+                <Grid
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <Box>
+                            <Menu
+                                startGame={() => startGameHandler}
+                                openDialog={() => openDialogHandler}
+                                started={state.started}
+                                keys={state.useKeys}
+                                over={state.gameOver}
+                                loading={loading}
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item>
+                        <Box>
+                            <Typography variant="h5">
+                                Your score: {state.dots.length - 3}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item md={8}>
+                <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="flex-end"
+                >
+                    <Box>
+                        {state.gameOver ? (
+                            <Grid
+                                container
+                                direction="row"
+                                justify="center"
+                                alignItems="center"
+                                className={classes.gameover}
+                            >
+                                <Typography variant="h4">Game over!</Typography>
+                            </Grid>
+                        ) : (
+                            <GameArea>
+                                <Snake dots={state.dots} />
+                                <Food coords={state.food} />
+                            </GameArea>
+                        )}
+                    </Box>
+                </Grid>
+            </Grid>
+        </Grid>
     );
 };
 
