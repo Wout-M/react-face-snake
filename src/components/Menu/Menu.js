@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+
 import Grid from "@material-ui/core/Grid";
-import Spinner from "../Spinner/Spinner";
-import { Button, Typography, IconButton } from "@material-ui/core";
+import Button from "@material-ui/core/Button"
+import  Typography  from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import HelpIcon from "@material-ui/icons/Help";
+
+import Spinner from "../Spinner/Spinner";
+
 
 const useStyles = makeStyles((theme) => ({
     video: {
@@ -80,6 +84,7 @@ const Menu = (props) => {
                     >
                         <Grid item>
                         <Button
+                                onClick={props.openDialog()}
                                 color="primary"
                                 variant="contained"
                                 classes={{ containedPrimary: classes.button }}

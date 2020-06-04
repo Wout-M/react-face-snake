@@ -8,7 +8,9 @@ const Title = () => {
         <div className={classes.title}>
             <Box top>
                 <Typography variant="h3">Face snake</Typography>
-                <Typography variant="subtitle2s">Play snake with your face as controller</Typography>
+                <Typography>
+                    Play snake, with your face as controller
+                </Typography>
             </Box>
         </div>
     );

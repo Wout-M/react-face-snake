@@ -1,14 +1,15 @@
 import React, { useEffect, useReducer, useState } from "react";
 
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+
 import GameArea from "../GameArea/GameArea";
 import Snake from "../Snake/Snake";
 import Food from "../Food/Food";
-import Grid from "@material-ui/core/Grid";
 import { load, predict } from "../../model/facemesh";
 import Menu from "../Menu/Menu";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Box from "../Box/Box"
+import Box from "../Box/Box";
 
 const fps = 10;
 
@@ -136,7 +137,11 @@ const useStyles = makeStyles((theme) => ({
         padding: "30px",
         margin: "auto",
         maxWidth: "1400px",
-    }
+    },
+    gameover: {
+        height: "600px",
+        width: "600px",
+    },
 }));
 
 const GameController = (props) => {
@@ -201,6 +206,10 @@ const GameController = (props) => {
         setLoading(true);
     };
 
+    const openDialogHandler = () => {
+        props.openDialog();
+    };
+
     return (
         <Grid
             container
@@ -220,6 +229,7 @@ const GameController = (props) => {
                         <Box>
                             <Menu
                                 startGame={() => startGameHandler}
+                                openDialog={() => openDialogHandler}
                                 started={state.started}
                                 keys={state.useKeys}
                                 over={state.gameOver}
@@ -229,7 +239,9 @@ const GameController = (props) => {
                     </Grid>
                     <Grid item>
                         <Box>
-                            <Typography variant="h5">Your score: {state.dots.length - 3}</Typography>
+                            <Typography variant="h5">
+                                Your score: {state.dots.length - 3}
+                            </Typography>
                         </Box>
                     </Grid>
                 </Grid>
@@ -243,7 +255,15 @@ const GameController = (props) => {
                 >
                     <Box>
                         {state.gameOver ? (
-                            <p>Game over!</p>
+                            <Grid
+                                container
+                                direction="row"
+                                justify="center"
+                                alignItems="center"
+                                className={classes.gameover}
+                            >
+                                <Typography variant="h4">Game over!</Typography>
+                            </Grid>
                         ) : (
                             <GameArea>
                                 <Snake dots={state.dots} />
