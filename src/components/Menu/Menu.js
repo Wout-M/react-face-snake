@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Spinner from "../Spinner/Spinner";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import HelpIcon from "@material-ui/icons/Help";
 
 const useStyles = makeStyles((theme) => ({
     video: {
         borderRadius: theme.spacing(1),
         marginBottom: theme.spacing(2),
-        width: "100%"
+        width: "100%",
     },
     button: {
-        background: "rgb(100, 32, 245)",
-    },
+        background: "#6420f5",
+        "&:hover": {
+            background: "#000094"
+        }
+    }
 }));
 
 const Menu = (props) => {
@@ -40,6 +44,10 @@ const Menu = (props) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (props.started) setReady(false);
+    }, [props]);
+
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <Grid item>
@@ -50,7 +58,7 @@ const Menu = (props) => {
                     playsInline
                 ></video>
             </Grid>
-            <Grid item>
+            <Grid item style={{width: "100%"}}>
                 {props.over ? (
                     <Button
                         onClick={() => window.location.reload()}
@@ -65,12 +73,23 @@ const Menu = (props) => {
                 ) : (
                     <Grid
                         container
-                        direction="column"
-                        justify="center"
+                        direction="row"
+                        justify="space-between"
                         alignItems="center"
+                        
                     >
                         <Grid item>
-                            <Button
+                        <Button
+                                color="primary"
+                                variant="contained"
+                                classes={{ containedPrimary: classes.button }}
+                            >
+                                <HelpIcon/>
+                            </Button>
+                            
+                        </Grid>
+                        <Grid item>
+                        <Button
                                 onClick={props.startGame()}
                                 disabled={!ready}
                                 color="primary"

@@ -4,11 +4,11 @@ import GameArea from "../GameArea/GameArea";
 import Snake from "../Snake/Snake";
 import Food from "../Food/Food";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import { load, predict } from "../../model/facemesh";
 import Menu from "../Menu/Menu";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography"
+import Typography from "@material-ui/core/Typography";
+import Box from "../Box/Box"
 
 const fps = 10;
 
@@ -121,9 +121,9 @@ const reducer = (state, action) => {
 const initialState = {
     direction: DIRECTIONS.down,
     dots: [
-        [0, 0],
-        [0, 2],
-        [0, 4],
+        [50, 50],
+        [50, 52],
+        [50, 54],
     ],
     food: foodCoordsHandler(),
     gameOver: false,
@@ -133,14 +133,9 @@ const initialState = {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        padding: "50px",
+        padding: "30px",
         margin: "auto",
-        maxWidth: "1400px"
-    },
-    rounding: {
-        borderRadius: theme.spacing(3),
-        margin: theme.spacing(1),
-        padding: theme.spacing(3),
+        maxWidth: "1400px",
     }
 }));
 
@@ -207,33 +202,55 @@ const GameController = (props) => {
     };
 
     return (
-        <Grid container direction="row" justify="center" alignItems="center" className={classes.root}>
-            <Grid item sm={12} md={4}>
-            <Grid container direction="column" justify="center" alignItems="center" >
-                <Paper classes={{ root: classes.rounding }}>
-                    <Menu
-                        startGame={() => startGameHandler}
-                        started={state.started}
-                        keys={state.useKeys}
-                        over={state.gameOver}
-                        loading={loading}
-                    />
-                </Paper>
+        <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+            className={classes.root}
+        >
+            <Grid item md>
+                <Grid
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <Box>
+                            <Menu
+                                startGame={() => startGameHandler}
+                                started={state.started}
+                                keys={state.useKeys}
+                                over={state.gameOver}
+                                loading={loading}
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item>
+                        <Box>
+                            <Typography variant="h5">Your score: {state.dots.length - 3}</Typography>
+                        </Box>
+                    </Grid>
                 </Grid>
             </Grid>
-            <Grid item sm={12} md={8}>
-            <Grid container direction="column" justify="center" alignItems="center" >
-
-                <Paper classes={{ root: classes.rounding }}>
-                    {state.gameOver ? (
-                        <p>Game over!</p>
-                    ) : (
-                        <GameArea>
-                            <Snake dots={state.dots} />
-                            <Food coords={state.food} />
-                        </GameArea>
-                    )}
-                </Paper>
+            <Grid item md={8}>
+                <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="flex-end"
+                >
+                    <Box>
+                        {state.gameOver ? (
+                            <p>Game over!</p>
+                        ) : (
+                            <GameArea>
+                                <Snake dots={state.dots} />
+                                <Food coords={state.food} />
+                            </GameArea>
+                        )}
+                    </Box>
                 </Grid>
             </Grid>
         </Grid>

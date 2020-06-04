@@ -1,0 +1,19 @@
+.rounding {
+    border-radius: 24px;
+    margin: 8px;
+    padding: 24px;
+    background: #fff;
+    box-shadow: rgba(209, 230, 255, 0.57) 0px 2px 24px 1px;
+    text-align: center;
+}
+
+
+.top {
+    margin: 0px;
+    border-radius: 0px 0px 24px 24px;
+}
+
+.bottom {
+    margin: 0px;
+    border-radius: 24px 24px 0px 0px ;
+}

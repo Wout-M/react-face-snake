@@ -12,8 +12,8 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    border: 6px solid #000;
-    border-color: #000 transparent #000 transparent;
+    border: 6px solid #6420f5;
+    border-color: #6420f5 transparent #6420f5 transparent;
     animation: loader 1.2s linear infinite;
 }
 @keyframes loader {

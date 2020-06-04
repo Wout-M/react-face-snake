@@ -1,0 +1,19 @@
+.container {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    height: 5rem;
+}
+
+.footer {
+    width: 70%;
+    margin: auto;
+}
+
+.button {
+    background: #6420f5;
+}
+
+.button:hover {
+    background: #000094;
+}
