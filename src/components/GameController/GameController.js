@@ -46,7 +46,7 @@ const moveHeadHandler = (direction, head) => {
 const checkBorderHandler = (head) =>
     head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0;
 
-const checkSnakeCollapsedHandler = (dots) => {
+/*const checkSnakeCollapsedHandler = (dots) => {
     const snake = dots.slice(0, dots.length - 1);
     const head = dots[dots.length - 1];
     let isCollapsed = false;
@@ -58,7 +58,7 @@ const checkSnakeCollapsedHandler = (dots) => {
     });
 
     return isCollapsed;
-};
+};*/
 
 const checkEatingHandler = (head, food) =>
     head[0] === food[0] && head[1] === food[1];
@@ -154,10 +154,7 @@ const GameController = (props) => {
     useEffect(() => {
         if (state.started) {
             const moveSnake = () => {
-                if (
-                    checkSnakeCollapsedHandler(state.dots) ||
-                    checkBorderHandler(state.dots[state.dots.length - 1])
-                ) {
+                if (checkBorderHandler(state.dots[state.dots.length - 1])) {
                     dispatch({ type: "GAME_OVER" });
                     setStart(false);
                 } else {
