@@ -67,10 +67,13 @@ const InfoDialog = (props) => {
     const [contentIndex, setContentIndex] = useState(0);
 
     const previousContentHandler = () => {
-        setContentIndex((prevIndex) => (prevIndex - 1) % 3);
+        contentIndex === 0
+            ? setContentIndex(2)
+            : setContentIndex((prevIndex) => (prevIndex - 1) % 3);        
     };
 
     const nextContentHandler = () => {
+
         setContentIndex((prevIndex) => (prevIndex + 1) % 3);
     };
 
