@@ -62,7 +62,7 @@ const Menu = (props) => {
                     playsInline
                 ></video>
             </Grid>
-            <Grid item style={{width: "100%"}}>
+            <Grid item style={{width: "100%"}}> 
                 {props.over ? (
                     <Button
                         onClick={() => window.location.reload()}
@@ -108,6 +108,14 @@ const Menu = (props) => {
                         </Grid>
                     </Grid>
                 )}
+                <Grid item>
+                <Typography variant="subtitle2" style={{marginTop: "10px"}}>
+                Disclaimer: This game is made for pc
+                </Typography>
+                <Typography variant="subtitle2" style={{marginBottom: "-10px"}}>
+                Mobile support is still in development
+                </Typography>
+                </Grid>
             </Grid>
         </Grid>
     );

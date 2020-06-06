@@ -7,13 +7,13 @@ const content = [
         img: { snake },
         title: "Snake",
 
-        text: `Move the snake around to gather food. Don't move into the border or into a part of the snake or it's game over.`,
+        text: `Move the snake around to gather food. Don't move into the border or it's game over...`,
     },
     {
         img: { food },
         title: "Food",
 
-        text: `Gather food with the snake by moving to it. Each time you eat some food you'll get 1 extra point`,
+        text: `Gather food with the snake by moving to it. Each time you eat some food your snake will grow and you'll get 1 extra point`,
     },
     {
         img: { directions },
