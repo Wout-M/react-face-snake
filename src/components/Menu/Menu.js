@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button"
-import  Typography  from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import HelpIcon from "@material-ui/icons/Help";
 
 import Spinner from "../Spinner/Spinner";
-
 
 const useStyles = makeStyles((theme) => ({
     video: {
@@ -18,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
     button: {
         background: "#6420f5",
         "&:hover": {
-            background: "#000094"
-        }
-    }
+            background: "#000094",
+        },
+    },
 }));
 
 const Menu = (props) => {
@@ -62,7 +61,7 @@ const Menu = (props) => {
                     playsInline
                 ></video>
             </Grid>
-            <Grid item style={{width: "100%"}}> 
+            <Grid item style={{ width: "100%" }}>
                 {props.over ? (
                     <Button
                         onClick={() => window.location.reload()}
@@ -80,21 +79,19 @@ const Menu = (props) => {
                         direction="row"
                         justify="space-between"
                         alignItems="center"
-                        
                     >
                         <Grid item>
-                        <Button
+                            <Button
                                 onClick={props.openDialog()}
                                 color="primary"
                                 variant="contained"
                                 classes={{ containedPrimary: classes.button }}
                             >
-                                <HelpIcon/>
+                                <HelpIcon />
                             </Button>
-                            
                         </Grid>
                         <Grid item>
-                        <Button
+                            <Button
                                 onClick={props.startGame()}
                                 disabled={!ready}
                                 color="primary"
@@ -109,12 +106,18 @@ const Menu = (props) => {
                     </Grid>
                 )}
                 <Grid item>
-                <Typography variant="subtitle2" style={{marginTop: "10px"}}>
-                Disclaimer: This game is made for pc
-                </Typography>
-                <Typography variant="subtitle2" style={{marginBottom: "-10px"}}>
-                Mobile support is still in development
-                </Typography>
+                    <Typography
+                        variant="subtitle2"
+                        style={{ marginTop: "10px" }}
+                    >
+                        Disclaimer: This game is made for pc
+                    </Typography>
+                    <Typography
+                        variant="subtitle2"
+                        style={{ marginBottom: "-10px" }}
+                    >
+                        Mobile support is still in development
+                    </Typography>
                 </Grid>
             </Grid>
         </Grid>
