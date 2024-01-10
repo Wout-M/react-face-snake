@@ -1,7 +1,6 @@
-import React from "react";
 import Dot from "./Dot/Dot";
 
-const Snake = (props) => {
+export default function Snake(props) {
     return props.dots.map((dot, i) => (
         <Dot
             top={dot[1]}
@@ -11,5 +10,3 @@ const Snake = (props) => {
         />
     ));
 };
-
-export default Snake;

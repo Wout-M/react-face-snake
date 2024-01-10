@@ -1,7 +1,6 @@
-import React from "react";
 import classes from "./Food.module.css";
 
-const Food = (props) => {
+export default function Food(props) {
     return (
         <div
             className={classes.Food}
@@ -9,5 +8,3 @@ const Food = (props) => {
         ></div>
     );
 };
-
-export default Food;

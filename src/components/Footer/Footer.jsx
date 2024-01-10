@@ -1,36 +1,12 @@
-import React from "react";
+import { Typography, Grid, IconButton, Link } from '@mui/material';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography"
-import Grid from "@material-ui/core/Grid"
-import IconButton from "@material-ui/core/IconButton"
-import Link from "@material-ui/core/Link";
-import LinkedInIcon from "@material-ui/icons/LinkedIn";
-import GitHubIcon from "@material-ui/icons/GitHub";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-
+import classes from "./Footer.module.css"
 import Box from "../Box/Box";
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        width: "100%",
-        position: "absolute",
-        bottom: "0px",
-    },
-    footer: {
-        width: "70%",
-        margin: "auto",
-    },
-    button: {
-        color: "#6420f5",
-        "&:hover": {
-            color: "#000094",
-        },
-    },
-}));
-
-const Footer = () => {
-    const classes = useStyles();
+export default function Footer() {
     return (
         <div className={classes.container}>
             <div className={classes.footer}>
@@ -38,7 +14,7 @@ const Footer = () => {
                     <Grid
                         container
                         direction="row"
-                        justify="space-between"
+                        justifyContent="space-between"
                         alignItems="center"
                     >
                         <Grid item>
@@ -54,7 +30,6 @@ const Footer = () => {
                                 <IconButton color="primary" variant="contained">
                                     <AccountCircleIcon
                                         fontSize="large"
-                                        className={classes.button}
                                     />
                                 </IconButton>
                             </Link>
@@ -65,7 +40,6 @@ const Footer = () => {
                                 <IconButton color="primary" variant="contained">
                                     <LinkedInIcon
                                         fontSize="large"
-                                        className={classes.button}
                                     />
                                 </IconButton>
                             </Link>
@@ -76,7 +50,6 @@ const Footer = () => {
                                 <IconButton color="primary" variant="contained">
                                     <GitHubIcon
                                         fontSize="large"
-                                        className={classes.button}
                                     />
                                 </IconButton>
                             </Link>
@@ -87,5 +60,3 @@ const Footer = () => {
         </div>
     );
 };
-
-export default Footer;

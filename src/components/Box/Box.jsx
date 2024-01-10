@@ -1,7 +1,6 @@
-import React from "react";
 import classes from "./Box.module.css";
 
-const Box = (props) => {
+export default function Box(props) {
     let style = [classes.rounding];
 
     props.top && style.push(classes.top);
@@ -10,4 +9,3 @@ const Box = (props) => {
     return <div className={style.join(" ")}>{props.children}</div>;
 };
 
-export default Box;

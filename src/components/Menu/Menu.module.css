@@ -1,0 +1,6 @@
+.video {
+    border-radius: 8px;
+    margin-bottom: 16px;
+    width: 100%;
+    transform: scaleX(-1);
+}

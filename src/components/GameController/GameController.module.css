@@ -1,0 +1,10 @@
+.root {
+    padding: 30px;
+    margin: auto;
+    max-width: 1400px;
+}
+
+.gameover {
+    height: 600px;
+    width: 600px !important;
+}

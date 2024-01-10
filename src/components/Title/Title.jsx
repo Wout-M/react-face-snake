@@ -1,9 +1,8 @@
-import React from "react";
 import Box from "../Box/Box";
-import { Typography } from "@material-ui/core";
+import { Typography } from '@mui/material';
 import classes from "./Title.module.css";
 
-const Title = () => {
+export default function Title() {
     return (
         <div className={classes.title}>
             <Box top>
@@ -15,5 +14,3 @@ const Title = () => {
         </div>
     );
 };
-
-export default Title;

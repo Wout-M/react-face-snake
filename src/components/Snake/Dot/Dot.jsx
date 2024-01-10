@@ -1,7 +1,6 @@
-import React from "react";
 import classes from "./Dot.module.css";
 
-const Dot = (props) => {
+export default function Dot(props) {
     return (
         <div
             className={props.first ? classes.First : classes.Dot}
@@ -9,5 +8,3 @@ const Dot = (props) => {
         ></div>
     );
 };
-
-export default Dot;

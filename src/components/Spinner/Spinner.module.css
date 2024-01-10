@@ -6,6 +6,7 @@
     text-align: center;
     margin: auto;
 }
+
 .Loader:after {
     content: " ";
     display: block;
@@ -16,6 +17,7 @@
     border-color: #6420f5 transparent #6420f5 transparent;
     animation: loader 1.2s linear infinite;
 }
+
 @keyframes loader {
     0% {
         transform: rotate(0deg);

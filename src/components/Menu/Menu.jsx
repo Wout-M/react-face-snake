@@ -1,40 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import HelpIcon from "@material-ui/icons/Help";
+import { Button, Typography, Grid } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 
+import classes from "./Menu.module.css"
 import Spinner from "../Spinner/Spinner";
 
-const useStyles = makeStyles((theme) => ({
-    video: {
-        borderRadius: theme.spacing(1),
-        marginBottom: theme.spacing(2),
-        width: "100%",
-    },
-    button: {
-        background: "#6420f5",
-        "&:hover": {
-            background: "#000094",
-        },
-    },
-}));
-
-const Menu = (props) => {
+export default function Menu(props) {
     const [ready, setReady] = useState(false);
-    const classes = useStyles();
 
     useEffect(() => {
         let video = document.getElementById("video");
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            // Not adding `{ audio: true }` since we only want video now
             navigator.mediaDevices
                 .getUserMedia({ video: true })
                 .then((stream) => {
-                    //video.src = window.URL.createObjectURL(stream);
                     video.srcObject = stream;
                     video.play();
                     setReady(true);
@@ -52,14 +33,14 @@ const Menu = (props) => {
     }, [props]);
 
     return (
-        <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="column" justifyContent = "center" alignItems="center">
             <Grid item>
                 <video
                     className={classes.video}
                     id="video"
                     autoPlay
                     playsInline
-                ></video>
+                />
             </Grid>
             <Grid item style={{ width: "100%" }}>
                 {props.over ? (
@@ -67,7 +48,7 @@ const Menu = (props) => {
                         onClick={() => window.location.reload()}
                         color="primary"
                         variant="contained"
-                        classes={{ containedPrimary: classes.button }}
+                        className={classes.button}
                     >
                         Restart game
                     </Button>
@@ -77,7 +58,7 @@ const Menu = (props) => {
                     <Grid
                         container
                         direction="row"
-                        justify="space-between"
+                        justifyContent="space-between"
                         alignItems="center"
                     >
                         <Grid item>
@@ -85,8 +66,7 @@ const Menu = (props) => {
                                 onClick={props.openDialog()}
                                 color="primary"
                                 variant="contained"
-                                classes={{ containedPrimary: classes.button }}
-                            >
+                                >
                                 <HelpIcon />
                             </Button>
                         </Grid>
@@ -96,7 +76,6 @@ const Menu = (props) => {
                                 disabled={!ready}
                                 color="primary"
                                 variant="contained"
-                                classes={{ containedPrimary: classes.button }}
                             >
                                 <Typography variant="body1">
                                     Start game
@@ -123,5 +102,3 @@ const Menu = (props) => {
         </Grid>
     );
 };
-
-export default Menu;

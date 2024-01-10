@@ -1,15 +1,14 @@
-import React, { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { Typography, Grid } from '@mui/material';
 
+import classes from "./GameController.module.css"
 import GameArea from "../GameArea/GameArea";
 import Snake from "../Snake/Snake";
 import Food from "../Food/Food";
-import { load, predict } from "../../model/facemesh";
 import Menu from "../Menu/Menu";
 import Box from "../Box/Box";
+import { load, predict } from "../../face/faceapi";
 
 const fps = 10;
 
@@ -18,6 +17,7 @@ const DIRECTIONS = {
     down: "DOWN",
     left: "LEFT",
     right: "RIGHT",
+    nothing: "NO FACE DETECTED"
 };
 
 const foodCoordsHandler = () => {
@@ -46,20 +46,6 @@ const moveHeadHandler = (direction, head) => {
 const checkBorderHandler = (head) =>
     head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0;
 
-/*const checkSnakeCollapsedHandler = (dots) => {
-    const snake = dots.slice(0, dots.length - 1);
-    const head = dots[dots.length - 1];
-    let isCollapsed = false;
-
-    snake.forEach((dot) => {
-        if (head[0] === dot[0] && head[1] === dot[1]) {
-            isCollapsed = true;
-        }
-    });
-
-    return isCollapsed;
-};*/
-
 const checkEatingHandler = (head, food) =>
     head[0] === food[0] && head[1] === food[1];
 
@@ -73,8 +59,8 @@ const loadModel = async () => {
     return await load();
 };
 
-const getFaceDirecton = async (model, video) => {
-    return await predict(model, video);
+const getFaceDirecton = async (canvas, video) => {
+    return await predict(canvas, video);
 };
 
 const reducer = (state, action) => {
@@ -132,25 +118,12 @@ const initialState = {
     canStart: false,
 };
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: "30px",
-        margin: "auto",
-        maxWidth: "1400px",
-    },
-    gameover: {
-        height: "600px",
-        width: "600px",
-    },
-}));
-
-const GameController = (props) => {
+export default function GameController(props) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [start, setStart] = useState(false);
     const [direction, setDirection] = useState(DIRECTIONS.down);
     const [loading, setLoading] = useState(false);
-    const classes = useStyles();
-
+    
     useEffect(() => {
         if (state.started) {
             const moveSnake = () => {
@@ -170,14 +143,15 @@ const GameController = (props) => {
 
     useEffect(() => {
         let video = document.getElementById("video");
+        let canvas = document.getElementById("overlay");
         if (start) {
             const getPrediction = async () => {
                 const model = loadModel();
-                model.then((model) => {
+                model.then(() => {
                     dispatch({ type: "START" });
 
                     const getDirecton = () => {
-                        getFaceDirecton(model, video).then((response) => {
+                        getFaceDirecton(canvas, video).then((response) => {
                             setLoading(false);
                             response && setDirection(response);
                         });
@@ -211,7 +185,7 @@ const GameController = (props) => {
         <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent= "center"
             alignItems="flex-start"
             className={classes.root}
         >
@@ -219,7 +193,7 @@ const GameController = (props) => {
                 <Grid
                     container
                     direction="column"
-                    justify="flex-start"
+                    justifyContent= "flex-start"
                     alignItems="center"
                 >
                     <Grid item>
@@ -239,6 +213,7 @@ const GameController = (props) => {
                             <Typography variant="h5">
                                 Your score: {state.dots.length - 3}
                             </Typography>
+                            <Typography>{direction ? direction : "NO FACE DETECTED"}</Typography>
                         </Box>
                     </Grid>
                 </Grid>
@@ -247,7 +222,7 @@ const GameController = (props) => {
                 <Grid
                     container
                     direction="column"
-                    justify="center"
+                    justifyContent= "center"
                     alignItems="flex-end"
                 >
                     <Box>
@@ -255,7 +230,7 @@ const GameController = (props) => {
                             <Grid
                                 container
                                 direction="row"
-                                justify="center"
+                                justifyContent= "center"
                                 alignItems="center"
                                 className={classes.gameover}
                             >
@@ -273,5 +248,3 @@ const GameController = (props) => {
         </Grid>
     );
 };
-
-export default GameController;

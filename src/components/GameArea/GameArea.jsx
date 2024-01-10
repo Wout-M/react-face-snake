@@ -1,12 +1,9 @@
-import React from "react";
 import classes from "./GameArea.module.css";
 
-const GameArea = (props) => {
+export default function GameArea(props) {
     return (
         <div className={classes.GameArea}>
             <div className={classes.content}>{props.children}</div>
         </div>
     );
 };
-
-export default GameArea;

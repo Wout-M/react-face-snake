@@ -1,96 +1,51 @@
-import React, { useState } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import { useState } from "react";
 
+import { Dialog, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
+import classes from "./InfoDialog.module.css"
 import content from "./DialogContent";
 
-const styles = (theme) => ({
-    root: {
-        margin: 0,
-        padding: theme.spacing(2),
-    },
-    closeButton: {
-        position: "absolute",
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500],
-    },
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
-    return (
-        <MuiDialogTitle disableTypography className={classes.root} {...other}>
-            <Typography variant="h6">{children}</Typography>
-            {onClose ? (
-                <IconButton
-                    aria-label="close"
-                    className={classes.closeButton}
-                    onClick={onClose}
-                >
-                    <CloseIcon />
-                </IconButton>
-            ) : null}
-        </MuiDialogTitle>
-    );
-});
-
-const DialogContent = withStyles((theme) => ({
-    root: {
-        padding: theme.spacing(2),
-    },
-}))(MuiDialogContent);
-
-const useStyles = makeStyles((theme) => ({
-    img: {
-        maxWidth: "300px",
-        borderRadius: "24px",
-    },
-    button: {
-        color: "#6420f5",
-        "&:hover": {
-            color: "#000094",
-        },
-    },
-}));
-
-const InfoDialog = (props) => {
-    const classes = useStyles();
+export default function InfoDialog(props) {
     const [contentIndex, setContentIndex] = useState(0);
 
     const previousContentHandler = () => {
         contentIndex === 0
             ? setContentIndex(2)
-            : setContentIndex((prevIndex) => (prevIndex - 1) % 3);        
+            : setContentIndex((prevIndex) => (prevIndex - 1) % 3);
     };
 
     const nextContentHandler = () => {
-
         setContentIndex((prevIndex) => (prevIndex + 1) % 3);
     };
 
     return (
         <Dialog
-            onClose={props.closing}
             aria-labelledby="customized-dialog-title"
             open={props.open}
         >
-            <DialogTitle id="customized-dialog-title" onClose={props.closing}>
+            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
                 How does this thing work?
             </DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={props.closing}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
             <DialogContent dividers>
                 <Grid
                     container
                     direction="row"
-                    justify="center"
+                    justifyContent="center"
                     alignItems="center"
                 >
                     <Grid item xs={1}>
@@ -101,7 +56,6 @@ const InfoDialog = (props) => {
                         >
                             <ArrowBackIosIcon
                                 fontSize="large"
-                                className={classes.button}
                             />
                         </IconButton>
                     </Grid>
@@ -109,7 +63,7 @@ const InfoDialog = (props) => {
                         <Grid
                             container
                             direction="column"
-                            justify="center"
+                            justifyContent="center"
                             alignItems="center"
                         >
                             <Grid item>
@@ -137,14 +91,11 @@ const InfoDialog = (props) => {
                         >
                             <ArrowForwardIosIcon
                                 fontSize="large"
-                                className={classes.button}
                             />
                         </IconButton>
                     </Grid>
                 </Grid>
             </DialogContent>
         </Dialog>
-    );
+    )
 };
-
-export default InfoDialog;
