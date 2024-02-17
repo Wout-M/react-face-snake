@@ -1,7 +1,5 @@
 # React Face Snake
-Play the famous game Snake in a whole new way, with the position of your face.
-
-The game can be found [here](https://face-snake.netlify.app/).
+Play the famous game Snake in a whole new way, with the position of your face, hosted on [Netlify](https://www.netlify.com/).
 
 This version of Snake was inspired by [the game made by Paruby](https://github.com/paruby/snake-face)
 
